@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Ivory (light) -->
+    <color name="window_bg">#F6F4EF</color>
+    <color name="bar_bg">#FFFFFF</color>
+    <!-- Brand, used by the launcher icon -->
+    <color name="icon_bg">#111110</color>
+    <color name="icon_fg">#E2DFD8</color>
+</resources>

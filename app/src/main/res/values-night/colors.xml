@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Obsidian (dark) -->
+    <color name="window_bg">#111110</color>
+    <color name="bar_bg">#1C1B19</color>
+</resources>
