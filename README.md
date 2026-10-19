@@ -16,7 +16,7 @@ Every push to `main` builds a new APK automatically (Actions → Build APK) and 
 
 - **Home**: one room at a time, with room tabs, a readings strip and device cards for lights, fan, AC, blinds and curtains, the front door lock, sensors and outlets.
 - **Chat**: ask the assistant to change things. Replies stream in, each action shows as a chip, and the lock always asks you to confirm.
-- **Admin**: approve new nodes with a name and a room. Users and rooms, and the action log, come next.
+- **Admin**: approve new nodes with a name and a room. Users and rooms, and the action log, are designed (see `design/HANDOFF.md`) and come to the app next.
 - **Settings**: switch between admin, member and guest (view-only), switch theme, and simulate a blind timeout or an offline lamp.
 
 Hard rules the UI follows:
@@ -32,7 +32,7 @@ Hard rules the UI follows:
 ```
 app/src/main/assets/www/   the interface (HTML, CSS, JS, bundled fonts)
 app/src/main/java/...      MainActivity: hosts the interface, handles Back
-design/                    design tokens and the design system notes
+design/                    tokens (CSS, JSON), design system notes, HANDOFF.md
 .github/workflows/         builds the APK on every push
 ```
 
@@ -51,6 +51,5 @@ The APK lands in `app/build/outputs/apk/debug/`.
 ## Next
 
 - Wire the app to the hub's gateway API (sign-in, rooms and devices, live state, chat stream, confirmations).
-- Admin: users and rooms, action log.
-- Edge states: loading, empty and error.
+- Build the users and rooms screen, the action log and the edge states from the designs.
 - A native Jetpack Compose UI built from the same design tokens in `design/tokens.json`.
