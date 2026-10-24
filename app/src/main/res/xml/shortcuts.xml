@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Long-press the launcher icon to change the gateway address -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="change_gateway"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_gateway"
+        android:shortcutShortLabel="@string/shortcut_change_short"
+        android:shortcutLongLabel="@string/shortcut_change_long">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.edgehome.app"
+            android:targetClass="com.edgehome.app.SetupActivity" />
+    </shortcut>
+</shortcuts>

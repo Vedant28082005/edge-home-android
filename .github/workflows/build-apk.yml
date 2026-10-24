@@ -3,6 +3,7 @@ name: Build APK
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
@@ -11,6 +12,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      # Builds that publish (main, manual) must use the fixed release key.
+      # Pull-request builds only check that the app compiles.
+      REQUIRE_RELEASE_SIGNING: ${{ github.event_name != 'pull_request' }}
     steps:
       - uses: actions/checkout@v4
 
@@ -23,11 +28,42 @@ jobs:
         with:
           gradle-version: "8.10.2"
 
-      - name: Build debug APK
-        run: gradle :app:assembleDebug --no-daemon --stacktrace
+      - name: Restore release keystore
+        env:
+          KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          if [ -n "$KEYSTORE_BASE64" ]; then
+            echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/release.jks"
+            echo "ANDROID_KEYSTORE_PATH=$RUNNER_TEMP/release.jks" >> "$GITHUB_ENV"
+            echo "Release keystore restored."
+          elif [ "$REQUIRE_RELEASE_SIGNING" = "true" ]; then
+            echo "::error::ANDROID_KEYSTORE_BASE64 secret is missing. Add the four signing secrets (see README) and re-run."
+            exit 1
+          else
+            echo "::notice::No keystore secret here; this build is signed with the debug key and is not published."
+          fi
+
+      - name: Build release APK
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: gradle :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Check signature
+        run: |
+          APK=app/build/outputs/apk/release/app-release.apk
+          APKSIGNER=$(find "${ANDROID_HOME:-$ANDROID_SDK_ROOT}/build-tools" -name apksigner -type f 2>/dev/null | sort -V | tail -1)
+          if [ -z "$APKSIGNER" ]; then
+            echo "::warning::apksigner not found; skipping signature check"
+            exit 0
+          fi
+          echo "Using $APKSIGNER"
+          OUT=$("$APKSIGNER" verify --print-certs "$APK")
+          echo "$OUT" | grep -iE "certificate (DN|SHA-256)" || echo "$OUT"
 
       - name: Name the APK
-        run: cp app/build/outputs/apk/debug/app-debug.apk "EdgeHome-${{ github.run_number }}.apk"
+        run: cp app/build/outputs/apk/release/app-release.apk "EdgeHome-${{ github.run_number }}.apk"
 
       - uses: actions/upload-artifact@v4
         with:
@@ -35,12 +71,13 @@ jobs:
           path: EdgeHome-${{ github.run_number }}.apk
 
       - name: Publish release
+        if: github.event_name != 'pull_request'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: build-${{ github.run_number }}
           name: Edge Home build ${{ github.run_number }}
           body: |
-            Install on Android: download the APK below, open it, and allow installs from your browser or files app if asked.
-            This build runs the prototype with simulated devices. It does not talk to the hub yet.
+            Install on Android: download the APK below and open it. Builds from now on are signed with the fixed release key and install over each other.
+            The app opens the Edge Home dashboard from your hub's gateway (default https://homebench.tailffe052.ts.net).
           files: EdgeHome-${{ github.run_number }}.apk
           make_latest: true

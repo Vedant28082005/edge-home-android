@@ -1,55 +1,67 @@
 # Edge Home · Android
 
-The Android app for Edge Home, a local smart-home system that runs on a Raspberry Pi hub and is controlled through a gateway API, with an AI assistant that operates devices through chat.
-
-**Status: prototype build.** The app ships the full interface with simulated devices. It does not talk to the hub yet.
+The Android app for Edge Home. It opens the real Edge Home dashboard served by your hub's gateway in a full-screen WebView. Nothing is bundled: the dashboard comes from the hub, so dashboard updates need no new APK.
 
 ## Install on your phone
 
 1. Open the [latest release](../../releases/latest) on your phone.
-2. Download `EdgeHome-<n>.apk`.
-3. Open it. If Android asks, allow installs from your browser or files app.
+2. Download `EdgeHome-<n>.apk` and open it. If Android asks, allow installs from your browser or files app.
+3. On first launch, confirm the gateway address (default `https://homebench.tailffe052.ts.net`) and tap Connect.
 
-Every push to `main` builds a new APK automatically (Actions → Build APK) and publishes it as a release.
+Your phone must reach the hub: be on Tailscale (for a `*.ts.net` address) or the home network.
 
-## What's in the app
+Every push to `main` builds a signed release APK (Actions → Build APK) and publishes it as a release. All builds use the same release key, so a new build installs over the old one.
 
-- **Home**: one room at a time, with room tabs, a readings strip and device cards for lights, fan, AC, blinds and curtains, the front door lock, sensors and outlets.
-- **Chat**: ask the assistant to change things. Replies stream in, each action shows as a chip, and the lock always asks you to confirm.
-- **Admin**: approve new nodes with a name and a room. Users and rooms, and the action log, are designed (see `design/HANDOFF.md`) and come to the app next.
-- **Settings**: switch between admin, member and guest (view-only), switch theme, and simulate a blind timeout or an offline lamp.
+## What the app does
 
-Hard rules the UI follows:
+- **First-run screen**: asks for the gateway address and stores it on the phone. Change it later by long-pressing the app icon → Change gateway, or from the error page.
+- **Dashboard**: loads the gateway URL. Links to other sites open in the browser.
+- **Pull to refresh**: pull down at the top of the page.
+- **Offline page**: if the hub can't be reached, returns a server error, or has a bad certificate, the app shows a native error page with Try again and Change gateway.
+- **Back button**: goes back in the dashboard's history, then leaves the app.
+- **Dark and light**: status and navigation bars follow the phone's theme, and the dashboard gets the matching `prefers-color-scheme`.
+- **No device permissions**: the app asks only for internet access. Camera, microphone, location, file pickers and storage are all refused. HTTPS only.
 
-1. Locks look different from normal devices (risk color, shield label, no switch).
-2. Offline devices are dimmed and can't be controlled.
-3. Guests never see a control that wouldn't work for them.
-4. No tokens, hashes or internal IDs are ever shown.
-5. Dark and light themes with WCAG AA contrast, on phone, tablet and desktop.
+## Release signing (one-time setup)
+
+CI signs with a fixed key stored in four repository secrets:
+
+| Secret | Value |
+| --- | --- |
+| `ANDROID_KEYSTORE_BASE64` | The keystore file, base64-encoded |
+| `ANDROID_KEYSTORE_PASSWORD` | Keystore password |
+| `ANDROID_KEY_ALIAS` | Key alias (`edgehome`) |
+| `ANDROID_KEY_PASSWORD` | Key password |
+
+Create the key once, on your computer (needs a JDK for `keytool` and the GitHub CLI):
+
+```
+keytool -genkeypair -v -keystore edgehome-release.jks -alias edgehome -keyalg RSA -keysize 4096 -validity 10000 -dname "CN=Edge Home"
+base64 -w0 edgehome-release.jks | gh secret set ANDROID_KEYSTORE_BASE64 -R Vedant28082005/edge-home-android
+gh secret set ANDROID_KEYSTORE_PASSWORD -R Vedant28082005/edge-home-android
+gh secret set ANDROID_KEY_ALIAS -R Vedant28082005/edge-home-android --body edgehome
+gh secret set ANDROID_KEY_PASSWORD -R Vedant28082005/edge-home-android
+```
+
+On macOS use `base64 -i edgehome-release.jks` instead of `base64 -w0 edgehome-release.jks`. Keep `edgehome-release.jks` and its passwords backed up: without them, future builds can't update the installed app.
+
+Pull-request builds don't need the secrets; they compile with the debug key and aren't published. Builds on `main` fail if the secrets are missing.
 
 ## Project layout
 
 ```
-app/src/main/assets/www/   the interface (HTML, CSS, JS, bundled fonts)
-app/src/main/java/...      MainActivity: hosts the interface, handles Back
-design/                    tokens (CSS, JSON), design system notes, HANDOFF.md
-.github/workflows/         builds the APK on every push
+app/src/main/java/...      MainActivity (WebView), SetupActivity (first run), Gateway (stored URL)
+app/src/main/res/          layouts, Obsidian Platinum colors, error page, launcher shortcut
+design/                    tokens (CSS, JSON), design system notes, HANDOFF.md (final)
+.github/workflows/         builds and publishes the signed release APK
 ```
-
-The interface is served from inside the APK at `https://appassets.androidplatform.net/`, so it opens instantly and works offline.
 
 ## Build locally
 
 You need JDK 17 and the Android SDK (Android Studio installs both).
 
 ```
-gradle :app:assembleDebug
+gradle :app:assembleRelease
 ```
 
-The APK lands in `app/build/outputs/apk/debug/`.
-
-## Next
-
-- Wire the app to the hub's gateway API (sign-in, rooms and devices, live state, chat stream, confirmations).
-- Build the users and rooms screen, the action log and the edge states from the designs.
-- A native Jetpack Compose UI built from the same design tokens in `design/tokens.json`.
+Without the signing environment variables this signs with the debug key. The APK lands in `app/build/outputs/apk/release/`.

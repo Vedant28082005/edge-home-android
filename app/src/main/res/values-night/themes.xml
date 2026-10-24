@@ -6,5 +6,10 @@
         <item name="android:navigationBarColor">@color/bar_bg</item>
         <item name="android:windowLightStatusBar">false</item>
         <item name="android:windowLightNavigationBar">false</item>
+        <!-- Tells WebView the app is dark, so prefers-color-scheme: dark -->
+        <item name="android:isLightTheme">false</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorHint">@color/ink_3</item>
     </style>
 </resources>
