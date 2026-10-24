@@ -6,5 +6,51 @@
         <item name="android:navigationBarColor">@color/bar_bg</item>
         <item name="android:windowLightStatusBar">true</item>
         <item name="android:windowLightNavigationBar">true</item>
+        <!-- Tells WebView the app is light, so prefers-color-scheme: light -->
+        <item name="android:isLightTheme">true</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/ink</item>
+        <item name="android:textColorHint">@color/ink_3</item>
+    </style>
+
+    <style name="EdgeHome.Title" parent="">
+        <item name="android:fontFamily">serif</item>
+        <item name="android:textSize">32sp</item>
+        <item name="android:lineSpacingExtra">2sp</item>
+        <item name="android:textColor">@color/ink</item>
+    </style>
+
+    <style name="EdgeHome.Body" parent="">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:lineSpacingExtra">5sp</item>
+        <item name="android:textColor">@color/ink_2</item>
+    </style>
+
+    <style name="EdgeHome.Label" parent="">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/ink_2</item>
+    </style>
+
+    <style name="EdgeHome.Button" parent="">
+        <item name="android:minHeight">48dp</item>
+        <item name="android:paddingStart">20dp</item>
+        <item name="android:paddingEnd">20dp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="EdgeHome.Button.Primary">
+        <item name="android:background">@drawable/btn_primary</item>
+        <item name="android:textColor">@color/on_accent</item>
+    </style>
+
+    <style name="EdgeHome.Button.Secondary">
+        <item name="android:background">@drawable/btn_secondary</item>
+        <item name="android:textColor">@color/ink</item>
     </style>
 </resources>

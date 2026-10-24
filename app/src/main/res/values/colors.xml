@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Obsidian Platinum, Ivory (light) values from design/tokens.json -->
 <resources>
-    <!-- Ivory (light) -->
-    <color name="window_bg">#F6F4EF</color>
-    <color name="bar_bg">#FFFFFF</color>
+    <color name="window_bg">#F6F4EF</color>      <!-- bg -->
+    <color name="surface">#FFFFFF</color>        <!-- surface -->
+    <color name="surface_2">#EFECE5</color>      <!-- surface-2 -->
+    <color name="ink">#1A1917</color>            <!-- ink -->
+    <color name="ink_2">#4F4A42</color>          <!-- ink-2 -->
+    <color name="ink_3">#6B655B</color>          <!-- ink-3 -->
+    <color name="accent">#1F1E1B</color>         <!-- accent -->
+    <color name="on_accent">#F6F4EF</color>      <!-- on-accent -->
+    <color name="control_line">#8A847A</color>   <!-- control-line -->
+    <color name="risk">#B42318</color>           <!-- risk -->
+    <color name="warn">#8A5A00</color>           <!-- warn -->
+    <color name="warn_soft">#FDF3DC</color>      <!-- warn-soft -->
+    <color name="focus">#2B53A0</color>          <!-- focus -->
+    <color name="bar_bg">#FFFFFF</color>         <!-- navigation bar = surface -->
     <!-- Brand, used by the launcher icon -->
     <color name="icon_bg">#111110</color>
     <color name="icon_fg">#E2DFD8</color>

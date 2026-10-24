@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Obsidian Platinum, Obsidian (dark) values from design/tokens.json -->
 <resources>
-    <!-- Obsidian (dark) -->
     <color name="window_bg">#111110</color>
+    <color name="surface">#1C1B19</color>
+    <color name="surface_2">#26241F</color>
+    <color name="ink">#F2EDE4</color>
+    <color name="ink_2">#B5AFA4</color>
+    <color name="ink_3">#8C877D</color>
+    <color name="accent">#E2DFD8</color>
+    <color name="on_accent">#111110</color>
+    <color name="control_line">#77726A</color>
+    <color name="risk">#FF8F87</color>
+    <color name="warn">#F2B544</color>
+    <color name="warn_soft">#3A2C10</color>
+    <color name="focus">#8FB2EE</color>
     <color name="bar_bg">#1C1B19</color>
 </resources>

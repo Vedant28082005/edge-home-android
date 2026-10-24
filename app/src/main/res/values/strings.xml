@@ -1,4 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Edge Home</string>
+
+    <!-- First-run setup -->
+    <string name="setup_title">Connect to your hub</string>
+    <string name="setup_title_edit">Change gateway</string>
+    <string name="setup_body">Enter your hub\'s gateway address. Your phone needs to be on Tailscale or your home network to reach it.</string>
+    <string name="gateway_label">Gateway address</string>
+    <string name="gateway_hint">https://homebench.example.ts.net</string>
+    <string name="gateway_error">Enter an https:// address, like https://homebench.example.ts.net.</string>
+    <string name="setup_note">You can change it later: long-press the app icon and choose Change gateway.</string>
+    <string name="connect">Connect</string>
+
+    <!-- Offline / error page -->
+    <string name="error_unreachable_title">Can\'t reach your hub</string>
+    <string name="error_unreachable_body">Check that the hub is on and your phone is connected to Tailscale or the home Wi-Fi, then try again.</string>
+    <string name="error_hub_title">Your hub isn\'t answering</string>
+    <string name="error_hub_body">The hub is reachable but the dashboard didn\'t load. Give it a minute after a restart, then try again.</string>
+    <string name="error_cert_title">This connection isn\'t secure</string>
+    <string name="error_cert_body">The hub\'s security certificate couldn\'t be checked, so nothing was loaded. Check the gateway address.</string>
+    <string name="retry">Try again</string>
+    <string name="change_gateway">Change gateway</string>
+
+    <!-- Launcher shortcut -->
+    <string name="shortcut_change_short">Change gateway</string>
+    <string name="shortcut_change_long">Change hub gateway</string>
 </resources>
